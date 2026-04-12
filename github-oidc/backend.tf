@@ -1,8 +1,7 @@
-# store the terraform state file in s3
 terraform {
   backend "s3" {
     bucket = "quant-terraform-remote-state"
-    key    = "quant-vpc.tfstate"
+    key    = "github-oidc.tfstate"
     region = "us-east-1"
   }
 }

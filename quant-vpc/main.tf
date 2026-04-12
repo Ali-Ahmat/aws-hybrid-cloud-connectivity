@@ -1,12 +1,11 @@
-# configure aws provider
+# configure aws provider (use default credential chain: env vars in CI, AWS_PROFILE locally)
 provider "aws" {
-  region  = var.region
-  profile = "aws-user"
+  region = var.region
 }
 
-# create vpc 
+# create vpc
 module "vpc" {
-  source                       = "/Users/aliahmat/Documents/aws-terraform-project/modules/vpc"
+  source                       = "../modules/vpc"
   region                       = var.region
   project_name                 = var.project_name
   vpc_cidr                     = var.vpc_cidr
