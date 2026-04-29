@@ -28,7 +28,7 @@ module "ec2" {
   name                        = "quant-server"
   ami_id                      = var.ami_id
   instance_type               = "t2.micro"
-  subnet_id                   = module.vpc.private_subnet_ids[0]
+  subnet_id                   = module.vpc.private_app_subnet_ids[0]
   security_group_ids          = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = false
 
