@@ -33,7 +33,7 @@ module "ec2" {
   associate_public_ip_address = false
 
   tags = {
-    Project     = "quant-vpc"
+    Project = "quant-vpc"
   }
 }
 
