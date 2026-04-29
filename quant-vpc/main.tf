@@ -36,3 +36,30 @@ module "ec2" {
     Project     = "quant-vpc"
   }
 }
+
+
+resource "aws_security_group" "ec2_sg" {
+  name        = "quant-server-sg"
+  description = "Security group for EC2 instance"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    description = "SSH from my IP"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["YOUR_PUBLIC_IP/32"]
+  }
+
+  egress {
+    description = "Allow outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "quant-server-sg"
+  }
+}
