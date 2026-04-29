@@ -18,6 +18,10 @@ resource "aws_internet_gateway" "internet_gateway" {
   }
 }
 
+data "aws_availability_zones" "available_zones" {
+  state = "available"
+}
+
 
 # create public subnet az1
 resource "aws_subnet" "public_subnet_az1" {
