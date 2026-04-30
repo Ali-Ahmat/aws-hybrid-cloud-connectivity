@@ -18,9 +18,10 @@ resource "aws_internet_gateway" "internet_gateway" {
   }
 }
 
+data "aws_availability_zones" "available_zones" {
+  state = "available"
+}
 
-# use data source to get all avalablility zones in region
-data "aws_availability_zones" "available_zones" {}
 
 # create public subnet az1
 resource "aws_subnet" "public_subnet_az1" {
@@ -80,7 +81,7 @@ resource "aws_subnet" "private_app_subnet_az1" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "private subnet az1"
+    Name = "private app subnet az1"
   }
 }
 
