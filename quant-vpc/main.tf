@@ -3,11 +3,6 @@ provider "aws" {
   region = var.region
 }
 
-variable "ami_id" {
-  type        = string
-  description = "AMI ID for the EC2 instance"
-}
-
 # create vpc
 module "vpc" {
   source                       = "../modules/vpc"

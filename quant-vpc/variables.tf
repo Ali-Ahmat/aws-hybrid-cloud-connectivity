@@ -8,6 +8,11 @@ variable "project_name" {
   type        = string
 }
 
+variable "ami_id" {
+  description = "AMI ID used to launch the EC2 instance"
+  type        = string
+}
+
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
