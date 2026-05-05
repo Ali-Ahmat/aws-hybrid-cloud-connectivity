@@ -17,6 +17,7 @@ module "vpc" {
   private_data_subnet_az2_cidr = var.private_data_subnet_az2_cidr
 }
 
+# create ec2
 module "ec2" {
   source = "../modules/ec2"
 
@@ -32,7 +33,7 @@ module "ec2" {
   }
 }
 
-
+# create security group for ec2
 resource "aws_security_group" "ec2_sg" {
   name        = "quant-server-sg"
   description = "Security group for EC2 instance"
