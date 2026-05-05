@@ -1,5 +1,5 @@
 region              = "us-east-1"
-github_repository   = "YOUR_GITHUB_ORG/aws-terraform-project"
+github_repository   = "https://github.com/Ali-Ahmat/aws-hybrid-cloud-connectivity"
 state_bucket_name   = "quant-terraform-remote-state"
 iam_role_name       = "github-actions-terraform-ci"
 create_oidc_provider = true
