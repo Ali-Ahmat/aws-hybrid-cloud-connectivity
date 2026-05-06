@@ -4,13 +4,13 @@ on:
   pull_request:
     branches: [main, master]
     paths:
-      - "quant-vpc/**"
+      - "environments/**"
       - "modules/**"
       - ".github/workflows/terraform.yml"
   push:
     branches: [main, master]
     paths:
-      - "quant-vpc/**"
+      - "environments/**"
       - "modules/**"
       - ".github/workflows/terraform.yml"
 
@@ -23,24 +23,106 @@ env:
   TF_IN_AUTOMATION: true
 
 jobs:
-  terraform:
-    name: Plan / Apply (quant-vpc)
+  terraform-prod:
+    name: Plan / Apply (prod)
     runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
-        working-directory: quant-vpc
+        working-directory: environments/prod
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: configure aws credentials
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::670153028875:role/github-actions-ci
           role-session-name: githubactions
-          aws-region: "us-east-1"
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -input=false -no-color -out=tfplan
+
+      - name: Terraform Apply
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        run: terraform apply -input=false -auto-approve tfplan
+
+  terraform-dev:
+    name: Plan / Apply (dev)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: environments/dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::670153028875:role/github-actions-ci
+          role-session-name: githubactions
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -input=false -no-color -out=tfplan
+
+      - name: Terraform Apply
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        run: terraform apply -input=false -auto-approve tfplan
+
+  terraform-test:
+    name: Plan / Apply (test)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: environments/test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::670153028875:role/github-actions-ci
+          role-session-name: githubactions
+          aws-region: us-east-1
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
