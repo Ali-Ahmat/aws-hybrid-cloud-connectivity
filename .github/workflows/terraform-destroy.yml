@@ -3,6 +3,14 @@ name: Terraform Destroy
 on:
   workflow_dispatch:
     inputs:
+      environment:
+        description: "Environment to destroy"
+        required: true
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
       confirm_destroy:
         description: "Type DESTROY to confirm"
         required: true
@@ -24,7 +32,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: quant-vpc
+        working-directory: environments/${{ github.event.inputs.environment }}
 
     steps:
       - name: Checkout
@@ -38,12 +46,14 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -input=false
 
       - name: Terraform Plan Destroy
-        run: terraform plan -destroy -out=destroy.plan
+        run: terraform plan -destroy -input=false -out=destroy.plan
 
       - name: Terraform Apply Destroy
-        run: terraform apply -auto-approve destroy.plan
+        run: terraform apply -input=false -auto-approve destroy.plan
