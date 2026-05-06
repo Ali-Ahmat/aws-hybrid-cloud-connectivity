@@ -2,7 +2,7 @@
 region = "us-east-1"
 
 # Project Name
-project_name = "quant"
+project_name = "prod-vpc"
 
 # VPC CIDR Block
 vpc_cidr = "10.15.0.0/16"

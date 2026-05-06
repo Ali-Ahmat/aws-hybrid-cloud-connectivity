@@ -2,7 +2,7 @@
 region = "us-east-1"
 
 # Project Name
-project_name = "finance"
+project_name = "dev-vpc"
 
 # VPC CIDR Block
 vpc_cidr = "10.16.0.0/16"
