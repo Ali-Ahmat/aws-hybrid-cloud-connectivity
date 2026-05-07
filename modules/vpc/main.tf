@@ -120,3 +120,45 @@ resource "aws_subnet" "private_data_subnet_az2" {
     Name = "private data subnet az2"
   }
 }
+
+# route table for private app subnets
+resource "aws_route_table" "private_app_route_table" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name = "${var.project_name}-private-app-rt"
+  }
+}
+
+# associate private app subnet az1
+resource "aws_route_table_association" "private_app_subnet_az1_route_table_association" {
+  subnet_id      = aws_subnet.private_app_subnet_az1.id
+  route_table_id = aws_route_table.private_app_route_table.id
+}
+
+# associate private app subnet az2
+resource "aws_route_table_association" "private_app_subnet_az2_route_table_association" {
+  subnet_id      = aws_subnet.private_app_subnet_az2.id
+  route_table_id = aws_route_table.private_app_route_table.id
+}
+
+# route table for private data subnets
+resource "aws_route_table" "private_data_route_table" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name = "${var.project_name}-private-data-rt"
+  }
+}
+
+# associate private data subnet az1
+resource "aws_route_table_association" "private_data_subnet_az1_route_table_association" {
+  subnet_id      = aws_subnet.private_data_subnet_az1.id
+  route_table_id = aws_route_table.private_data_route_table.id
+}
+
+# associate private data subnet az2
+resource "aws_route_table_association" "private_data_subnet_az2_route_table_association" {
+  subnet_id      = aws_subnet.private_data_subnet_az2.id
+  route_table_id = aws_route_table.private_data_route_table.id
+}
