@@ -33,6 +33,14 @@ output "private_data_subnet_ids" {
   ]
 }
 
+output "private_app_route_table_id" {
+  value = aws_route_table.private_app_route_table.id
+}
+
+output "private_data_route_table_id" {
+  value = aws_route_table.private_data_route_table.id
+}
+
 output "internet_gateway" {
   value = aws_internet_gateway.internet_gateway
 }

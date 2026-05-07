@@ -3,6 +3,28 @@ provider "aws" {
   region = var.region
 }
 
+data "terraform_remote_state" "network_hub" {
+  backend = "s3"
+  config = {
+    bucket = "quant-terraform-remote-states"
+    key    = "network-hub/terraform.tfstate"
+    region = var.region
+  }
+}
+
+locals {
+  env_name = "prod"
+  allowed_destinations = lookup(
+    data.terraform_remote_state.network_hub.outputs.allowed_routes,
+    local.env_name,
+    []
+  )
+  allowed_destination_cidrs = {
+    for env in local.allowed_destinations :
+    env => data.terraform_remote_state.network_hub.outputs.vpc_cidrs[env]
+  }
+}
+
 # create vpc
 module "vpc" {
   source                       = "../modules/vpc"
@@ -58,4 +80,20 @@ resource "aws_security_group" "ec2_sg" {
   tags = {
     Name = "quant-server-sg"
   }
+}
+
+resource "aws_route" "private_app_to_tgw" {
+  for_each = local.allowed_destination_cidrs
+
+  route_table_id         = module.vpc.private_app_route_table_id
+  destination_cidr_block = each.value
+  transit_gateway_id     = data.terraform_remote_state.network_hub.outputs.transit_gateway_id
+}
+
+resource "aws_route" "private_data_to_tgw" {
+  for_each = local.allowed_destination_cidrs
+
+  route_table_id         = module.vpc.private_data_route_table_id
+  destination_cidr_block = each.value
+  transit_gateway_id     = data.terraform_remote_state.network_hub.outputs.transit_gateway_id
 }
