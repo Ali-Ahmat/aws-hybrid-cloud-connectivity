@@ -32,7 +32,9 @@ output "allowed_routes" {
   value       = var.allowed_routes
 }
 
-output "transit_vif_id" {
-  description = "Transit VIF ID (if created)"
-  value       = try(aws_dx_transit_virtual_interface.equinix[0].id, null)
+output "transit_vif_ids" {
+  description = "Transit VIF IDs keyed by path name"
+  value = {
+    for path_name, vif in aws_dx_transit_virtual_interface.equinix : path_name => vif.id
+  }
 }

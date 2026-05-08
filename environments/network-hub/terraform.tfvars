@@ -14,12 +14,25 @@ allowed_routes = {
 dx_gateway_name            = "quant-dx-gw"
 dx_gateway_amazon_side_asn = 64512
 
-# Set to true after Equinix provides the hosted connection ID and BGP details.
-create_transit_vif  = false
-dx_connection_id    = "dxcon-xxxxxxxx"
-transit_vif_name    = "equinix-transit-vif"
-transit_vif_vlan    = 101
-transit_vif_bgp_asn = 65010
+# Path-1 implemented, Path-2 kept planned/disabled until ready.
+transit_vifs = {
+  primary = {
+    enabled        = true
+    connection_id  = "dxcon-primaryxxxx"
+    name           = "equinix-transit-vif-primary"
+    vlan           = 101
+    bgp_asn        = 65010
+    address_family = "ipv4"
+    bgp_auth_key   = ""
+  }
 
-# Optional BGP MD5 key
-transit_vif_bgp_auth_key = ""
+  secondary = {
+    enabled        = false
+    connection_id  = "dxcon-secondaryx"
+    name           = "equinix-transit-vif-secondary"
+    vlan           = 102
+    bgp_asn        = 65011
+    address_family = "ipv4"
+    bgp_auth_key   = ""
+  }
+}

@@ -57,6 +57,11 @@ locals {
       if source_env != destination_env && contains(keys(locals.vpcs), source_env) && contains(keys(locals.vpcs), destination_env)
     }
   ]...)
+
+  active_transit_vifs = {
+    for path_name, vif in var.transit_vifs : path_name => vif
+    if vif.enabled
+  }
 }
 
 resource "aws_ec2_transit_gateway" "core" {
@@ -123,17 +128,18 @@ resource "aws_dx_gateway_association" "tgw" {
 }
 
 resource "aws_dx_transit_virtual_interface" "equinix" {
-  count = var.create_transit_vif ? 1 : 0
+  for_each = local.active_transit_vifs
 
-  connection_id  = var.dx_connection_id
-  name           = var.transit_vif_name
-  vlan           = var.transit_vif_vlan
-  address_family = var.transit_vif_address_family
-  bgp_asn        = var.transit_vif_bgp_asn
+  connection_id  = each.value.connection_id
+  name           = each.value.name
+  vlan           = each.value.vlan
+  address_family = each.value.address_family
+  bgp_asn        = each.value.bgp_asn
   dx_gateway_id  = aws_dx_gateway.core.id
-  bgp_auth_key   = var.transit_vif_bgp_auth_key != "" ? var.transit_vif_bgp_auth_key : null
+  bgp_auth_key   = each.value.bgp_auth_key != "" ? each.value.bgp_auth_key : null
 
   tags = {
-    Name = var.transit_vif_name
+    Name = each.value.name
+    Path = each.key
   }
 }
