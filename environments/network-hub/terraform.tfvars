@@ -14,7 +14,7 @@ allowed_routes = {
 dx_gateway_name            = "quant-dx-gw"
 dx_gateway_amazon_side_asn = 64512
 
-# Path-1 implemented, Path-2 kept planned/disabled until ready.
+# Path-1 primary and Path-2 secondary
 transit_vifs = {
   primary = {
     enabled        = true
