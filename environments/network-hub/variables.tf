@@ -44,44 +44,16 @@ variable "dx_gateway_amazon_side_asn" {
   default     = 64512
 }
 
-variable "create_transit_vif" {
-  description = "If true, creates a transit virtual interface for Equinix"
-  type        = bool
-  default     = false
-}
-
-variable "dx_connection_id" {
-  description = "Direct Connect connection ID (or hosted connection) from Equinix"
-  type        = string
-  default     = ""
-}
-
-variable "transit_vif_name" {
-  description = "Name of the transit virtual interface"
-  type        = string
-  default     = "equinix-transit-vif"
-}
-
-variable "transit_vif_vlan" {
-  description = "VLAN for the transit VIF"
-  type        = number
-  default     = 101
-}
-
-variable "transit_vif_bgp_asn" {
-  description = "Customer-side BGP ASN used by Equinix side"
-  type        = number
-}
-
-variable "transit_vif_address_family" {
-  description = "Address family for transit VIF"
-  type        = string
-  default     = "ipv4"
-}
-
-variable "transit_vif_bgp_auth_key" {
-  description = "Optional BGP MD5 auth key"
-  type        = string
-  default     = ""
-  sensitive   = true
+variable "transit_vifs" {
+  description = "Transit VIF definitions keyed by path name (for example, primary and secondary)"
+  type = map(object({
+    enabled        = bool
+    connection_id  = string
+    name           = string
+    vlan           = number
+    bgp_asn        = number
+    address_family = optional(string, "ipv4")
+    bgp_auth_key   = optional(string, "")
+  }))
+  default = {}
 }
