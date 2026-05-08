@@ -18,7 +18,7 @@ dx_gateway_amazon_side_asn = 64512
 transit_vifs = {
   primary = {
     enabled        = true
-    connection_id  = "dxcon-primaryxxxx"
+    connection_id  = "dxcon-primary"
     name           = "equinix-transit-vif-primary"
     vlan           = 101
     bgp_asn        = 65010
@@ -27,8 +27,8 @@ transit_vifs = {
   }
 
   secondary = {
-    enabled        = false
-    connection_id  = "dxcon-secondaryx"
+    enabled        = true
+    connection_id  = "dxcon-secondary"
     name           = "equinix-transit-vif-secondary"
     vlan           = 102
     bgp_asn        = 65011
